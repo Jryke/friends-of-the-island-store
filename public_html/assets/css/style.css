@@ -1,0 +1,578 @@
+/* ==========================================================================
+   Friends of the Island Store
+   Custom styles layered over Bootstrap 5.3.8
+   Palette sampled from the organization logo.
+   ========================================================================== */
+
+:root {
+  /* Brand palette (from logo) */
+  --fis-navy:        #153B6E;   /* logo ring + wordmark */
+  --fis-navy-deep:   #0D2647;   /* footer, hero scrim */
+  --fis-navy-soft:   #2E587E;   /* logo door blue */
+  --fis-cedar:       #8A6234;   /* weathered cedar shingle */
+  --fis-sand:        #EDE5D6;   /* pale sand / section wash */
+  --fis-sand-deep:   #DCD0BA;
+  --fis-sky:         #A4DBFC;   /* logo sky */
+  --fis-ink:         #21303F;
+  --fis-ink-soft:    #56626E;
+  --fis-line:        #D9D2C6;
+
+  /* Bootstrap variable overrides */
+  --bs-primary:      #153B6E;
+  --bs-primary-rgb:  21, 59, 110;
+  --bs-body-color:   #21303F;
+  --bs-body-font-family: "Newsreader", Georgia, "Times New Roman", serif;
+  --bs-body-font-size: 1.0625rem;
+  --bs-body-line-height: 1.72;
+  --bs-link-color:   #153B6E;
+  --bs-link-color-rgb: 21, 59, 110;
+  --bs-link-hover-color: #8A6234;
+  --bs-border-color: #D9D2C6;
+  --bs-emphasis-color: #0D2647;
+}
+
+/* --------------------------------------------------------------------------
+   Typography
+   -------------------------------------------------------------------------- */
+
+body {
+  background-color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Sans face carries navigation, buttons, labels and other interface text */
+.u-sans,
+.navbar,
+.btn,
+.form-label,
+.form-control,
+.form-select,
+.site-footer,
+.eyebrow,
+.badge,
+.breadcrumb {
+  font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: "Newsreader", Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  color: var(--fis-navy-deep);
+  letter-spacing: -0.008em;
+  line-height: 1.2;
+}
+
+h1, .h1 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem); font-weight: 400; }
+h2, .h2 { font-size: clamp(1.55rem, 1.25rem + 1.2vw, 2.125rem); }
+h3, .h3 { font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem); }
+
+p { margin-bottom: 1.15rem; }
+
+/* Comfortable measure for reading columns */
+.measure   { max-width: 68ch; }
+.measure-narrow { max-width: 58ch; }
+
+.lead {
+  font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.35rem);
+  line-height: 1.62;
+  font-weight: 400;
+  color: var(--fis-ink);
+}
+
+/* A short label used only where it encodes real information (issue dates,
+   board roles). Sentence case on purpose — no tracked-out caps. */
+.eyebrow {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fis-cedar);
+  margin-bottom: 0.35rem;
+}
+
+/* Section heading with a short cedar rule beneath it */
+.section-title {
+  position: relative;
+  padding-bottom: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 58px;
+  height: 3px;
+  background: var(--fis-cedar);
+}
+.text-center > .section-title::after,
+.section-title.text-center::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* --------------------------------------------------------------------------
+   Masthead + navigation
+   -------------------------------------------------------------------------- */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1080;
+  background: var(--fis-navy);
+  color: #fff;
+  padding: 0.65rem 1.1rem;
+  font-family: "Source Sans 3", sans-serif;
+}
+.skip-link:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+.masthead {
+  background: #fff;
+  padding: 1.35rem 0 1.15rem;
+  text-align: center;
+}
+.masthead__logo {
+  display: inline-block;
+  max-width: 320px;
+  width: 62vw;
+  height: auto;
+}
+.masthead__tagline {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.0625rem;
+  font-style: italic;
+  color: var(--fis-ink-soft);
+  margin: 0.55rem 0 0;
+}
+
+.navbar-fis {
+  background: var(--fis-navy);
+  border-top: 3px solid var(--fis-cedar);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.navbar-fis .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  margin: 0.6rem 0;
+}
+.navbar-fis .navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(164, 219, 252, 0.5);
+}
+.navbar-fis .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255,255,255,0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+.navbar-fis .nav-link {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.95rem 1.05rem;
+  border-bottom: 3px solid transparent;
+}
+.navbar-fis .nav-link:hover,
+.navbar-fis .nav-link:focus {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.18);
+}
+.navbar-fis .nav-link.active,
+.navbar-fis .show > .nav-link {
+  color: #fff;
+  border-bottom-color: var(--fis-sky);
+}
+.navbar-fis .dropdown-menu {
+  border: 0;
+  border-top: 3px solid var(--fis-cedar);
+  border-radius: 0;
+  margin-top: 0;
+  box-shadow: 0 10px 24px rgba(13, 38, 71, 0.18);
+  padding: 0.35rem 0;
+}
+.navbar-fis .dropdown-item {
+  font-family: "Source Sans 3", sans-serif;
+  padding: 0.6rem 1.2rem;
+  white-space: normal;
+  max-width: 22rem;
+}
+.navbar-fis .dropdown-item:hover,
+.navbar-fis .dropdown-item:focus {
+  background: var(--fis-sand);
+  color: var(--fis-navy-deep);
+}
+.navbar-fis .dropdown-item.active {
+  background: var(--fis-navy);
+  color: #fff;
+}
+
+.navbar-fis .navbar-brand-donate {
+  margin: 0.55rem 0.65rem 0.55rem auto;
+}
+
+/* Donate button pinned to the end of the bar */
+.btn-donate {
+  background: var(--fis-cedar);
+  border-color: var(--fis-cedar);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.btn-donate:hover,
+.btn-donate:focus {
+  background: #6F4E27;
+  border-color: #6F4E27;
+  color: #fff;
+}
+.btn-outline-navy {
+  border-color: var(--fis-navy);
+  color: var(--fis-navy);
+  font-weight: 600;
+}
+.btn-outline-navy:hover,
+.btn-outline-navy:focus {
+  background: var(--fis-navy);
+  color: #fff;
+}
+.btn-navy {
+  background: var(--fis-navy);
+  border-color: var(--fis-navy);
+  color: #fff;
+  font-weight: 600;
+}
+.btn-navy:hover,
+.btn-navy:focus {
+  background: var(--fis-navy-deep);
+  border-color: var(--fis-navy-deep);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Hero (home) and page banner (interior)
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  background: var(--fis-navy-deep);
+  overflow: hidden;
+}
+.hero__img {
+  display: block;
+  width: 100%;
+  height: clamp(260px, 44vw, 520px);
+  object-fit: cover;
+  object-position: center 62%;
+}
+.hero__caption {
+  background: var(--fis-navy-deep);
+  color: #fff;
+  padding: 1.5rem 0 1.65rem;
+}
+.hero__caption p {
+  margin: 0;
+  font-size: clamp(1.1rem, 1rem + 0.55vw, 1.4rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.page-banner {
+  background: var(--fis-navy-deep);
+  color: #fff;
+  padding: clamp(2rem, 1.4rem + 2.4vw, 3.25rem) 0;
+  border-bottom: 3px solid var(--fis-cedar);
+}
+.page-banner h1 {
+  color: #fff;
+  margin: 0;
+}
+.page-banner p {
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0.65rem 0 0;
+  max-width: 62ch;
+}
+
+/* --------------------------------------------------------------------------
+   Sections
+   -------------------------------------------------------------------------- */
+
+.section {
+  padding: clamp(2.25rem, 1.5rem + 3vw, 4rem) 0;
+}
+.section--sand {
+  background: var(--fis-sand);
+}
+.section--tight {
+  padding-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+.rule {
+  border: 0;
+  border-top: 1px solid var(--fis-line);
+  margin: 2.5rem 0;
+  opacity: 1;
+}
+
+/* Alternating image / text rows on the About page */
+.feature-row + .feature-row {
+  margin-top: clamp(2.25rem, 1.5rem + 2.5vw, 3.5rem);
+}
+.feature-row__img {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.feature-row__body h2 {
+  margin-bottom: 0.85rem;
+}
+
+/* Board member cards */
+.aside-img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.board-card {
+  height: 100%;
+  background: #fff;
+  border: 1px solid var(--fis-line);
+  border-radius: 2px;
+}
+.board-card__img {
+  width: 100%;
+  max-height: 420px;
+  /* aspect-ratio: 4 / 5; */
+  object-fit: cover;
+  background: var(--fis-sand);
+}
+.board-card__body {
+  padding: 1.15rem 1.25rem 1.35rem;
+}
+.board-card__name {
+  margin: 0 0 0.1rem;
+  font-size: 1.2rem;
+}
+.board-card__role {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fis-cedar);
+  margin-bottom: 0.7rem;
+}
+.board-card__bio {
+  font-size: 0.98rem;
+  line-height: 1.62;
+  margin: 0;
+  color: var(--fis-ink-soft);
+}
+
+/* Risk list on the Why page — the sea-level figures are the argument, so give
+   them a visible left rule rather than plain bullets. */
+.reason-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  counter-reset: none;
+}
+.reason-list > li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: 1.4rem;
+}
+.reason-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 10px;
+  height: 10px;
+  background: var(--fis-cedar);
+  border-radius: 50%;
+}
+.reason-list > li:last-child { margin-bottom: 0; }
+
+/* Sea-level projection figures */
+.projection {
+  border-left: 4px solid var(--fis-cedar);
+  background: #fff;
+  padding: 1.25rem 1.4rem;
+  height: 100%;
+}
+.projection__figure {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 2.35rem;
+  line-height: 1;
+  color: var(--fis-navy);
+  display: block;
+}
+.projection__label {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 0.98rem;
+  color: var(--fis-ink-soft);
+  margin: 0.5rem 0 0;
+}
+
+/* Newsletter article */
+.newsletter-article h2 {
+  margin-top: 2.25rem;
+}
+.newsletter-article h2:first-of-type {
+  margin-top: 0;
+}
+.newsletter-meta {
+  font-family: "Source Sans 3", sans-serif;
+  color: var(--fis-ink-soft);
+  font-size: 0.98rem;
+}
+
+/* Simple bordered info panel (hours, contact details, ways to give) */
+.panel {
+  background: #fff;
+  border: 1px solid var(--fis-line);
+  border-left: 4px solid var(--fis-navy);
+  padding: 1.35rem 1.5rem;
+}
+/* Only stretch to equal height inside a grid row of siblings */
+.panel--fill { height: 100%; }
+.panel h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+}
+.panel p:last-child,
+.panel ul:last-child { margin-bottom: 0; }
+
+/* Placeholder flag — remove these blocks as real content arrives */
+.placeholder-note {
+  background: #FDF6E3;
+  border: 1px dashed #C9A227;
+  color: #6B5410;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 2px;
+}
+.placeholder-note p:last-child { margin-bottom: 0; }
+
+/* --------------------------------------------------------------------------
+   Donate CTA band (appears on every page)
+   -------------------------------------------------------------------------- */
+
+.cta-band {
+  background: var(--fis-navy);
+  color: #fff;
+  padding: clamp(2rem, 1.4rem + 2.2vw, 3rem) 0;
+}
+.cta-band h2 {
+  color: #fff;
+  margin-bottom: 0.6rem;
+}
+.cta-band p {
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0;
+  max-width: 56ch;
+}
+.cta-band .btn {
+  padding: 0.7rem 1.9rem;
+  font-size: 1.0625rem;
+}
+
+/* --------------------------------------------------------------------------
+   Forms
+   -------------------------------------------------------------------------- */
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.97rem;
+  color: var(--fis-navy-deep);
+  margin-bottom: 0.35rem;
+}
+.form-control,
+.form-select {
+  border-radius: 2px;
+  border-color: #C6BDAE;
+  padding: 0.6rem 0.8rem;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--fis-navy-soft);
+  box-shadow: 0 0 0 0.2rem rgba(21, 59, 110, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  background: var(--fis-navy-deep);
+  color: rgba(255, 255, 255, 0.78);
+  padding: clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem) 0 0;
+  font-size: 0.98rem;
+}
+.site-footer h2 {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.85rem;
+}
+.site-footer a {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+}
+.site-footer a:hover,
+.site-footer a:focus {
+  color: #fff;
+  text-decoration: underline;
+}
+.site-footer__logo {
+  max-width: 210px;
+  height: auto;
+  margin-bottom: 0.9rem;
+}
+.footer-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-nav li { margin-bottom: 0.45rem; }
+.site-footer__bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  margin-top: 2.25rem;
+  padding: 1.15rem 0 1.35rem;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+.site-footer__bar a { color: rgba(255, 255, 255, 0.72); }
+
+/* --------------------------------------------------------------------------
+   Accessibility + motion
+   -------------------------------------------------------------------------- */
+
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.nav-link:focus-visible,
+.dropdown-item:focus-visible {
+  outline: 3px solid var(--fis-sky);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .navbar-fis, .cta-band, .site-footer, .hero, .page-banner { display: none !important; }
+  body { font-size: 11pt; }
+}
