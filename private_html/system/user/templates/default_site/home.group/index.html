@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+{head}
+{exp:channel:entries channel="home" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+<title>Friends of the Island Store &mdash; Isle au Haut, Maine</title>
+<meta name="description" content="{home_lead:attr_safe limit="200"}">
+{/exp:channel:entries}
+</head>
+<body>
+{nav}
+{exp:channel:entries channel="home" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+
+  <!-- ===== Hero ===== -->
+  {home_hero_image}
+  <section class="hero">
+    <img src="{url}" alt="{description}" class="hero__img" width="2000" height="1137">
+  </section>
+  {/home_hero_image}
+  {if home_hero_caption}
+  <div class="hero__caption">
+    <div class="container">
+      <p class="measure">{home_hero_caption}</p>
+    </div>
+  </div>
+  {/if}
+
+  <!-- ===== Welcome ===== -->
+  <section class="section">
+    <div class="container">
+      {if home_heading}<h1 class="section-title">{home_heading}</h1>{/if}
+      {if home_lead}<p class="lead">{home_lead}</p>{/if}
+      {home_body}
+    </div>
+  </section>
+
+  <!-- ===== How the Friends helps ===== -->
+  <section class="section section--sand">
+    <div class="container">
+      {if home_help_heading}<h2 class="section-title">{home_help_heading}</h2>{/if}
+      <div class="row g-4">
+        {home_help_panels}
+        <div class="{if home_help_panels:total_rows == 1}col-md-12{if:elseif home_help_panels:total_rows == 2}col-md-6{if:else}col-md-4{/if}">
+          <div class="panel panel--fill">
+            <h3>{home_help_panels:hp_heading}</h3>
+            <p>{home_help_panels:hp_text}</p>
+          </div>
+        </div>
+        {/home_help_panels}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Latest newsletter + store hours ===== -->
+  <section class="section">
+    <div class="container">
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-7">
+          {if home_news_heading}<h2 class="section-title">{home_news_heading}</h2>{/if}
+          {embed="_partials/_latest-newsletter"}
+          {if home_news_note}<p class="newsletter-meta">{home_news_note}</p>{/if}
+          <a class="btn btn-outline-navy" href="/newsletters">Read the newsletter</a>
+        </div>
+        <div class="col-lg-5">
+          {embed="_partials/_store-hours"}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {if home_cta_heading}
+  <section class="cta-band">
+    <div class="container">
+      <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+          <h2>{home_cta_heading}</h2>
+          {if home_cta_text}<p>{home_cta_text}</p>{/if}
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a class="btn btn-donate btn-lg" href="/donate">Donate</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  {/if}
+{/exp:channel:entries}
+{footer}
