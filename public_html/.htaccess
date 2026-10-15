@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Send everything that isn't a real file or folder to ExpressionEngine (clean URLs, no index.php)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.php/$1 [L]
