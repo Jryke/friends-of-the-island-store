@@ -1,0 +1,58 @@
+# ==========================================================================
+# Friends of the Island Store: this repo holds ONLY what runs on the production
+# server (public_html/ + private_html/), plus README.md and CHANGELOG.md.
+# Local dev tooling, notes, secrets and client uploads are never committed.
+# ==========================================================================
+
+# --- Secrets (EE reads these via private_html/.env.php; template: .env.example.php) ---
+private_html/.env.php
+.env
+.env.*
+!.env.example.php
+# (keep the tracked example at private_html/.env.example.php)
+!private_html/.env.example.php
+
+# --- Local development environment (Docker / helper scripts) ---
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+docker/
+ee-helper.php
+.env-example
+
+# --- Claude / AI tooling and working notes (not production files) ---
+CLAUDE.md
+.claude/
+SETUP-GUIDES.md
+QA-AND-LAUNCH-CHECKLIST.md
+DEPLOYMENT.md
+MAINTENANCE.md
+
+# --- Client-uploaded content (managed on the live server; avoids deploys overwriting uploads) ---
+public_html/images/uploads/*
+!public_html/images/uploads/index.html
+public_html/images/captchas/*
+!public_html/images/captchas/index.html
+
+# --- EE runtime/cache and installer leftovers ---
+private_html/system/user/cache/*
+!private_html/system/user/cache/index.html
+private_html/system/ee/installer_*/
+
+# --- Database dumps and backups (backed up outside git) ---
+*.sql
+*.sql.gz
+*.sql.zip
+*.dump
+*.tgz
+*.tar.gz
+
+# --- Scratch / OS / editor noise ---
+_build/
+_tmp/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
