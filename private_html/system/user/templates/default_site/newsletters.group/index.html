@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+{head}
+{exp:channel:entries channel="newsletters" url_title="{segment_2}" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+<title>{title} &mdash; Friends of the Island Store</title>
+<meta name="description" content="{news_summary:attr_safe limit="200"}">
+{/exp:channel:entries}
+</head>
+<body>
+{nav}
+{exp:channel:entries channel="newsletters" url_title="{segment_2}" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+
+  <section class="page-banner">
+    <div class="container">
+      <h1>Newsletters</h1>
+      <p><a class="text-white" href="/newsletters">&larr; All issues</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="measure newsletter-article">
+        {if news_season}<p class="eyebrow">{news_season}</p>{/if}
+        <h2 class="section-title">{title}</h2>
+        {news_body}
+        {news_pdf}<p class="mt-4"><a class="btn btn-outline-navy" href="{url}">Download the PDF</a></p>{/news_pdf}
+      </div>
+    </div>
+  </section>
+{if no_results}{redirect="404"}{/if}
+{/exp:channel:entries}
+{exp:channel:entries channel="pages" url_title="newsletters" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+  {if page_cta_heading}
+  <section class="cta-band">
+    <div class="container">
+      <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+          <h2>{page_cta_heading}</h2>
+          {if page_cta_text}<p>{page_cta_text}</p>{/if}
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a class="btn btn-donate btn-lg" href="/donate">Donate</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  {/if}
+{/exp:channel:entries}
+{footer}
