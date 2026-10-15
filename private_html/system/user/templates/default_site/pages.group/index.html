@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+{head}
+{exp:channel:entries channel="pages" limit="1" disable="member_data|pagination|categories|category_fields"}
+<title>{title} &mdash; Friends of the Island Store</title>
+<meta name="description" content="{page_banner_text:attr_safe limit="200"}">
+{/exp:channel:entries}
+</head>
+<body>
+{nav}
+{exp:channel:entries channel="pages" limit="1" disable="member_data|pagination|categories|category_fields"}
+
+  <section class="page-banner">
+    <div class="container">
+      <h1>{title}</h1>
+      {if page_banner_text}<p>{page_banner_text}</p>{/if}
+    </div>
+  </section>
+
+{page_content}
+
+  {page_content:rich_text}
+  {if '{rich_text:rich_style}' == 'band'}
+  <section class="section section--sand">
+    <div class="container">
+      <div class="measure lead-text">{rich_text:block_text}</div>
+    </div>
+  </section>
+  {if:elseif '{rich_text:rich_style}' == 'sections'}
+  <section class="section">
+    <div class="container">
+      <div class="measure text-page">{rich_text:block_text}</div>
+    </div>
+  </section>
+  {if:else}
+  <section class="section">
+    <div class="container">
+      <div class="measure">{rich_text:block_text}</div>
+    </div>
+  </section>
+  {/if}
+  {/page_content:rich_text}
+
+  {page_content:photo_text_rows}
+  <section class="section">
+    <div class="container">
+      {photo_text_rows:photo_rows}
+      <div class="row g-4 g-lg-5 align-items-center feature-row">
+        <div class="col-lg-6 order-lg-{if photo_rows:count % 2 == 1}1{if:else}2{/if}">
+          {photo_text_rows:photo_rows:row_image}<img src="{url}" alt="{description}" class="feature-row__img" width="1200" height="800">{/photo_text_rows:photo_rows:row_image}
+        </div>
+        <div class="col-lg-6 order-lg-{if photo_rows:count % 2 == 1}2{if:else}1{/if} feature-row__body">
+          <h2>{photo_rows:row_heading}</h2>
+          <p>{photo_rows:row_text}</p>
+        </div>
+      </div>
+      {/photo_text_rows:photo_rows}
+    </div>
+  </section>
+  {/page_content:photo_text_rows}
+
+  {page_content:boxes_section}
+  <section class="section section--sand">
+    <div class="container">
+      {if boxes_section:block_heading}<h2 class="section-title">{boxes_section:block_heading}</h2>{/if}
+      <div class="row g-4">
+        {boxes_section:box_items}
+        <div class="{if box_items:total_rows == 1}col-md-12{if:elseif box_items:total_rows == 2}col-md-6{if:else}col-md-4{/if}">
+          <div class="panel panel--fill">
+            <h3>{box_items:box_heading}</h3>
+            {box_items:box_text}
+          </div>
+        </div>
+        {/boxes_section:box_items}
+      </div>
+    </div>
+  </section>
+  {/page_content:boxes_section}
+
+  {page_content:number_callouts}
+  <section class="section section--sand section--tight">
+    <div class="container">
+      {if number_callouts:callouts_intro}<p class="measure mb-4">{number_callouts:callouts_intro}</p>{/if}
+      <div class="row g-3">
+        {number_callouts:callout_items}
+        <div class="{if callout_items:total_rows == 1}col-sm-12{if:elseif callout_items:total_rows == 2}col-sm-6{if:elseif callout_items:total_rows == 4}col-sm-3{if:else}col-sm-4{/if}">
+          <div class="projection">
+            <span class="projection__figure">{callout_items:callout_figure}</span>
+            <p class="projection__label">{callout_items:callout_label}</p>
+          </div>
+        </div>
+        {/number_callouts:callout_items}
+      </div>
+    </div>
+  </section>
+  {/page_content:number_callouts}
+
+  {page_content:people_cards}
+  <section class="section">
+    <div class="container">
+      {if people_cards:block_heading}<h2 class="section-title">{people_cards:block_heading}</h2>{/if}
+      <div class="row g-4">
+        {people_cards:people_items}
+        <div class="col-md-6 col-lg-4">
+          <div class="board-card">
+            {people_cards:people_items:person_photo}<img src="{url}" alt="{description}" class="board-card__img" width="600" height="750">{/people_cards:people_items:person_photo}
+            <div class="board-card__body">
+              <h3 class="board-card__name">{people_items:person_name}</h3>
+              {if people_items:person_role}<p class="board-card__role">{people_items:person_role}</p>{/if}
+              {if people_items:person_bio}<p class="board-card__bio">{people_items:person_bio}</p>{/if}
+            </div>
+          </div>
+        </div>
+        {/people_cards:people_items}
+      </div>
+    </div>
+  </section>
+  {/page_content:people_cards}
+
+  {page_content:text_side}
+  <section class="section">
+    <div class="container">
+      <div class="row g-4 g-lg-5">
+        <div class="col-lg-7">
+          {if text_side:block_heading}<h2 class="section-title">{text_side:block_heading}</h2>{/if}
+          <div class="reason-list">{text_side:block_text}</div>
+          {if text_side:donation_form_embed}
+          <div class="donation-embed">{text_side:donation_form_embed}</div>
+          {/if}
+        </div>
+        <div class="col-lg-5">
+          {if text_side:side_heading}<h2 class="section-title">{text_side:side_heading}</h2>{/if}
+          {text_side:side_image}<img src="{url}" alt="{description}" class="aside-img mb-4" width="1200" height="800">{/text_side:side_image}
+          {text_side:box_items}
+          <div class="panel mb-4">
+            <h3>{box_items:box_heading}</h3>
+            <div class="panel-rte">{box_items:box_text}</div>
+          </div>
+          {/text_side:box_items}
+        </div>
+      </div>
+    </div>
+  </section>
+  {/page_content:text_side}
+
+  {page_content:newsletters_list}
+  <section class="section section--tight">
+    <div class="container">
+      <div class="row g-4">
+        {embed="_partials/_newsletter-list"}
+        {if newsletters_list:soon_title}
+        <div class="col-md-6">
+          <div class="panel panel--fill">
+            <h3 class="mb-1">{newsletters_list:soon_title}</h3>
+            {if newsletters_list:soon_label}<p class="newsletter-meta mb-2">{newsletters_list:soon_label}</p>{/if}
+            {if newsletters_list:soon_text}<p class="mb-0">{newsletters_list:soon_text}</p>{/if}
+          </div>
+        </div>
+        {/if}
+      </div>
+    </div>
+  </section>
+  {/page_content:newsletters_list}
+
+  {page_content:contact_info}
+  <section class="section">
+    <div class="container">
+      <div class="row g-4 g-lg-5">
+        <div class="col-lg-7">
+          {if contact_info:contact_form_heading}<h2 class="section-title">{contact_info:contact_form_heading}</h2>{/if}
+          {embed="_partials/_contact-form"}
+        </div>
+        <div class="col-lg-5">
+          {if contact_info:contact_direct_heading}<h2 class="section-title">{contact_info:contact_direct_heading}</h2>{/if}
+          {embed="_partials/_contact-details"}
+          {if contact_info:contact_store_heading}
+          <div class="panel">
+            <h3>{contact_info:contact_store_heading}</h3>
+            {if contact_info:contact_store_text}<p>{contact_info:contact_store_text}</p>{/if}
+            {embed="_partials/_store-phone"}
+          </div>
+          {/if}
+        </div>
+      </div>
+    </div>
+  </section>
+  {/page_content:contact_info}
+
+{/page_content}
+
+  {if page_cta_heading}
+  <section class="cta-band">
+    <div class="container">
+      <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+          <h2>{page_cta_heading}</h2>
+          {if page_cta_text}<p>{page_cta_text}</p>{/if}
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a class="btn btn-donate btn-lg" href="/donate">Donate</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  {/if}
+{/exp:channel:entries}
+{footer}
