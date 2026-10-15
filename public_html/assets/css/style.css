@@ -576,3 +576,36 @@ button:focus-visible,
   .navbar-fis, .cta-band, .site-footer, .hero, .page-banner { display: none !important; }
   body { font-size: 11pt; }
 }
+
+/* --------------------------------------------------------------------------
+   Rich-text (CMS) content — the editor can't add classes, so style by wrapper
+   -------------------------------------------------------------------------- */
+.reason-list ul { list-style: none; padding-left: 0; margin: 0; }
+.reason-list ul > li { position: relative; padding-left: 1.6rem; margin-bottom: 1.4rem; }
+.reason-list ul > li::before {
+  content: ""; position: absolute; left: 0; top: 0.62em;
+  width: 10px; height: 10px; background: var(--fis-cedar); border-radius: 50%;
+}
+.reason-list ul > li:last-child { margin-bottom: 0; }
+
+.text-page h2 { position: relative; padding-bottom: 0.85rem; margin-bottom: 1.5rem; }
+.text-page h2::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 58px; height: 3px; background: var(--fis-cedar);
+}
+.text-page h2:not(:first-child) { margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid var(--fis-line); }
+.text-page h2:not(:first-child)::after { bottom: 0; }
+
+.panel > :last-child { margin-bottom: 0; }
+.store-hours > p:first-of-type { margin-bottom: 0.5rem; }
+.panel-rte p { margin-bottom: 0.5rem; }
+.panel-rte > :last-child { margin-bottom: 0; }
+.measure hr { border: 0; border-top: 1px solid var(--fis-line); margin: 2.5rem 0; opacity: 1; }
+.lead-text > p {
+  font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.35rem);
+  line-height: 1.62;
+  font-weight: 400;
+  color: var(--fis-ink);
+}
+.lead-text > :last-child { margin-bottom: 0; }
+
