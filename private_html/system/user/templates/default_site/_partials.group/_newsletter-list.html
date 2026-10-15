@@ -1,0 +1,9 @@
+{exp:channel:entries channel="newsletters" dynamic="no" orderby="entry_date" sort="desc" disable="member_data|pagination|categories|category_fields"}
+        <div class="col-md-6">
+          <div class="panel panel--fill">
+            <h3 class="mb-1">{news_season}</h3>
+            <p class="newsletter-meta mb-2">{if count == 1}Current issue{if:else}Earlier issue{/if}</p>
+            <p class="mb-0"><a href="/newsletters/{url_title}">Read this issue</a></p>
+          </div>
+        </div>
+{/exp:channel:entries}

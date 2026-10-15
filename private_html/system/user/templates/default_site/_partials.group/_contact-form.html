@@ -1,0 +1,31 @@
+{exp:channel:entries channel="site_info" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+{exp:email:contact_form user_recipients="no" replyto="yes" recipients="{site_form_email}" charset="utf-8" return="home/contact-sent" name="contact-form"}
+  <div class="row g-3">
+    <div class="col-sm-6">
+      <label for="cf-name" class="form-label">Your name</label>
+      <input type="text" class="form-control" id="cf-name" name="name" autocomplete="name" required>
+    </div>
+    <div class="col-sm-6">
+      <label for="cf-from" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="cf-from" name="from" autocomplete="email" required>
+    </div>
+    <div class="col-12">
+      <label for="cf-subject" class="form-label">Subject</label>
+      <select class="form-select" id="cf-subject" name="subject">
+        <option>General question</option>
+        <option>Making a donation</option>
+        <option>Volunteering</option>
+        <option>Newsletter</option>
+        <option>Something else</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <label for="cf-message" class="form-label">Message</label>
+      <textarea class="form-control" id="cf-message" name="message" rows="7" required></textarea>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-navy btn-lg">Send message</button>
+    </div>
+  </div>
+{/exp:email:contact_form}
+{/exp:channel:entries}

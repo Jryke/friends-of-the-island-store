@@ -1,0 +1,8 @@
+{exp:channel:entries channel="site_info" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+          <div class="panel mb-4">
+            <h3>Friends of the Island Store</h3>
+            {if site_address}<address class="mb-3">{site_address}</address>{/if}
+            {if site_phone}<p class="mb-1"><a href="tel:{site_phone}">{site_phone}</a></p>{/if}
+            {if site_email}<p class="mb-0"><a href="mailto:{site_email}">{site_email}</a></p>{/if}
+          </div>
+{/exp:channel:entries}
