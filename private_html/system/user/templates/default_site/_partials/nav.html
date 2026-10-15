@@ -1,0 +1,40 @@
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ===== Masthead ===== -->
+{exp:channel:entries channel="site_info" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+<header class="masthead">
+  <div class="container">
+    <a href="/" aria-label="Friends of the Island Store, home">
+      <img src="/images/uploads/logo.png" alt="Friends of the Island Store" class="masthead__logo" width="900" height="600">
+    </a>
+    {if site_tagline}<p class="masthead__tagline">{site_tagline}</p>{/if}
+  </div>
+</header>
+{/exp:channel:entries}
+
+<!-- ===== Navigation ===== -->
+<nav class="navbar navbar-expand-lg navbar-fis" aria-label="Main navigation">
+  <div class="container">
+    <a class="btn btn-donate btn-sm d-lg-none navbar-brand-donate" href="/donate">Donate</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-lg-auto">
+        <li class="nav-item"><a class="nav-link{if segment_1 == ''} active{/if}"{if segment_1 == ''} aria-current="page"{/if} href="/">Home</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle{if segment_1 == 'about' || segment_1 == 'why'} active{/if}" href="/about" role="button" data-bs-toggle="dropdown" aria-expanded="false">About</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item{if segment_1 == 'about'} active{/if}" href="/about">About the Friends</a></li>
+            <li><a class="dropdown-item{if segment_1 == 'why'} active{/if}" href="/why">Why the Friends of the Island Store</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link{if segment_1 == 'newsletters'} active{/if}" href="/newsletters">Newsletters</a></li>
+        <li class="nav-item"><a class="nav-link{if segment_1 == 'donate'} active{/if}" href="/donate">Donate</a></li>
+        <li class="nav-item"><a class="nav-link{if segment_1 == 'contact'} active{/if}" href="/contact">Contact</a></li>
+      </ul>
+      <a class="btn btn-donate d-none d-lg-inline-block" href="/donate">Donate</a>
+    </div>
+  </div>
+</nav>
+<main id="main">
