@@ -5,6 +5,7 @@ A running log of every notable change made while developing the Friends of the I
 Most of the CMS structure (channels, fields, entries, Structure pages) lives in the **database**, which is not tracked in git, so this changelog is the only record of those changes. Add a line under **Unreleased** with every change.
 
 ## [Unreleased]
+- README now describes the production site only (local development and Mailpit removed) and has a new **Branding** section (color palette, fonts, logo, name and contact) taken from `style.css`.
 - Pre-launch to-do: Zeffy $1 live test donation after deploy, MailerSend SMTP values in the server's `.env.php`, QR code for `/give`, automatic image resizing for CMS uploads, favicon, real contact-form recipient, contact-form spam protection.
 
 ---
