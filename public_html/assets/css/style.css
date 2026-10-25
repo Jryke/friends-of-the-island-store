@@ -609,3 +609,10 @@ button:focus-visible,
 }
 .lead-text > :last-child { margin-bottom: 0; }
 
+/* Zeffy embed: its script sets inline "max-width: 600px; margin: 0 auto" on [data-zeffy-embed]
+   (centers the form in a narrower box). Override so the form fills the column.
+   Scoped to the CMS wrapper, so any pasted embed code is covered without editing it. */
+.donation-embed [data-zeffy-embed] {
+  max-width: none !important;
+  margin: 0 !important;
+}
