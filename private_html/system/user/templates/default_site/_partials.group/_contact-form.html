@@ -10,13 +10,16 @@
     </div>
     <div class="col-12">
       <label for="cf-subject" class="form-label">Subject</label>
-      <select class="form-select" id="cf-subject" name="subject">
-        <option>General question</option>
-        <option>Making a donation</option>
-        <option>Volunteering</option>
-        <option>Newsletter</option>
-        <option>Something else</option>
+      {exp:channel:entries channel="site_info" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
+      {if site_contact_subjects:total_rows > 0}
+      <select class="form-select" id="cf-subject" name="subject" required>
+        {site_contact_subjects}<option>{site_contact_subjects:subject}</option>
+        {/site_contact_subjects}
       </select>
+      {if:else}
+      <input type="text" class="form-control" id="cf-subject" name="subject" required>
+      {/if}
+      {/exp:channel:entries}
     </div>
     <div class="col-12">
       <label for="cf-message" class="form-label">Message</label>

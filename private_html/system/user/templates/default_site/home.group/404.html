@@ -7,12 +7,14 @@
 </head>
 <body>
 {nav}
+{exp:channel:entries channel="site_info" dynamic="no" limit="1" disable="member_data|pagination|categories|category_fields"}
 <section class="page-banner">
     <div class="container">
-      <h1>Page not found</h1>
-      <p>We couldn&rsquo;t find the page you were looking for.</p>
+      <h1>{site_notfound_heading}</h1>
+      <p>{site_notfound_text}</p>
     </div>
   </section>
+{/exp:channel:entries}
   <section class="section">
     <div class="container">
       <p><a class="btn btn-navy" href="/">Go to the home page</a></p>
