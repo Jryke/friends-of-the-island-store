@@ -6,7 +6,14 @@ Most of the CMS structure (channels, fields, entries, Structure pages) lives in 
 
 ## [Unreleased]
 - README now describes the production site only (local development and Mailpit removed) and has a new **Branding** section (color palette, fonts, logo, name and contact) taken from `style.css`.
-- Pre-launch to-do: Zeffy $1 live test donation after deploy, MailerSend SMTP values in the server's `.env.php`, QR code for `/give`, automatic image resizing for CMS uploads, favicon, real contact-form recipient, contact-form spam protection.
+- **Contact form** switched from EE's Email module (`{exp:email:contact_form}`) to a custom **`form_submission` add-on** (CP: Add-Ons > Forms): saves submissions to `exp_form_submissions` and emails a notification via MailerSend SMTP. `_partials.group/_contact-form.html` now wraps `{exp:form_submission:form}`; form fields renamed to `first_name`/`email`/`subject`/`message` to match the add-on's email builder.
+- Contact recipient moved from the Site Info `site_form_email` field to the add-on's `recipient_email` setting (friendsoftheislandstore@gmail.com); the now-unused **`site_form_email` field was removed** from the site_info channel.
+- Spam protection on the contact form: **reCAPTCHA v3** (invisible) + a **honeypot** field + a submission **time-trap** (min fill time, HMAC-signed timestamp).
+- Add-on security hardening (pre-deploy audit): removed an unused redirect-countdown extension that carried a reflected-XSS / open-redirect vector (`$_GET['redirect_to']` written into `window.location`), and changed the CP "delete submission" action from a GET link to a CSRF-protected POST.
+- Add-on hardening + cleanup pass (**v1.0.1**): POST/CSRF guard on the settings save (a GET could previously wipe settings); `process()` now ignores array-valued POST fields (no more 500) with field count/length caps; port 465 uses SSL while 587/2525 stay STARTTLS; settings reads collapsed to one cached query per request; removed dead code and unused language keys; corrected stale docblocks. `update()` clears the orphaned `Form_submission_ext` extension row (run the Add-On Manager update once per environment).
+- Add-on settings (MailerSend SMTP creds, captcha keys) are stored **encrypted per environment** with `session_crypt_key`, so they are re-entered in each environment's CP (not carried by a DB copy); Install must be run per environment to create the tables.
+- SMTP/deliverability: MailerSend sending domain `friendsoftheislandstore.org` verified (SPF/DKIM/DMARC pass, inbox delivery confirmed via a direct send test). This dev network blocks SMTP ports 587/465, so local uses port **2525**; EE's 5s `smtp_timeout` plus erratic local TLS means the actual email send is validated on **Cloudways staging**, not locally.
+- Pre-launch to-do: Zeffy $1 live test donation after deploy, MailerSend SMTP values in the server's `.env.php`, QR code for `/give`, automatic image resizing for CMS uploads, favicon.
 
 ---
 

@@ -49,16 +49,6 @@ class Form_submission_upd extends Installer
             UNIQUE KEY `site_setting` (`site_id`, `setting_key`)
         ) DEFAULT CHARACTER SET {$charset} COLLATE {$collate}");
 
-        ee()->db->insert('exp_extensions', [
-            'class'    => 'Form_submission_ext',
-            'method'   => 'template_post_parse',
-            'hook'     => 'template_post_parse',
-            'settings' => '',
-            'priority' => 10,
-            'version'  => '1.0.0',
-            'enabled'  => 'y',
-        ]);
-
         return true;
     }
 
@@ -82,6 +72,10 @@ class Form_submission_upd extends Installer
      */
     public function update($current = '')
     {
+        // Remove the orphan extension row left behind after ext.form_submission.php was deleted.
+        // Idempotent: harmless if the row is already gone.
+        ee()->db->where('class', 'Form_submission_ext')->delete('exp_extensions');
+
         return true;
     }
 }

@@ -23,7 +23,6 @@ $lang = array(
     'fs_referral'              => 'Referral',
     'fs_yes'                   => 'Yes',
     'fs_no'                    => 'No',
-    'fs_view'                  => 'View',
 
     // Detail view
     'fs_submission'            => 'Submission',
@@ -73,11 +72,9 @@ $lang = array(
     'fs_captcha_failed'               => 'Verification Failed',
     'fs_captcha_failed_desc'          => 'CAPTCHA verification failed. Please go back and try again.',
     'fs_captcha_go_back'              => 'Go Back',
-
-    // Thank-you / confirmation page
-    'fs_form_submitted'        => 'Form Submitted',
-    'fs_thank_you'             => 'Thank You',
-    'fs_submission_received'   => 'Your message has been received. We will get back to you shortly.',
+    'fs_timetrap_failed'              => 'Please Try Again',
+    'fs_timetrap_failed_desc'         => 'Your message was submitted too quickly or the form has expired. Please go back, wait a moment, and send it again.',
+    'fs_timetrap_go_back'             => 'Go Back',
 
     // Required by EE
     ''                         => '',

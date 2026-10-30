@@ -6,7 +6,7 @@
  * Provides three sections in the EE CP:
  *   - Submissions  : paginated list of all captured submissions
  *   - Detail       : view / delete a single submission
- *   - Settings     : configure MailerSend API key, sender, recipient
+ *   - Settings     : configure MailerSend SMTP credentials, sender, recipient
  */
 class Form_submission_mcp
 {
@@ -181,6 +181,11 @@ class Form_submission_mcp
 
     public function delete_submission()
     {
+        // State-changing: POST only. EE core validates the CSRF token on CP POSTs.
+        if (ee()->input->method() !== 'post') {
+            ee()->functions->redirect(ee('CP/URL', 'addons/settings/form_submission'));
+        }
+
         $segments = ee()->uri->segment_array();
         $id = (int) end($segments);
 
@@ -238,6 +243,11 @@ class Form_submission_mcp
 
     public function save_settings()
     {
+        // State-changing: POST only. EE core validates the CSRF token on CP POSTs.
+        if (ee()->input->method() !== 'post') {
+            ee()->functions->redirect(ee('CP/URL', 'addons/settings/form_submission'));
+        }
+
         $site_id = (int) ee()->config->item('site_id');
 
         // These values are encrypted at rest using EE's Encrypt service

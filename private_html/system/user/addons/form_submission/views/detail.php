@@ -46,11 +46,11 @@
             </tbody>
         </table>
 
-        <a href="<?= $delete_url ?>"
-           class="button button--danger button--small"
-           onclick="return confirm(<?= json_encode(lang('fs_confirm_delete')) ?>);">
-            <?= lang('fs_delete_submission') ?>
-        </a>
+        <?= form_open($delete_url, ['onsubmit' => 'return confirm(' . htmlspecialchars(json_encode(lang('fs_confirm_delete')), ENT_QUOTES) . ');']) ?>
+            <button type="submit" class="button button--danger button--small">
+                <?= lang('fs_delete_submission') ?>
+            </button>
+        <?= form_close() ?>
 
     </div>
 </div>

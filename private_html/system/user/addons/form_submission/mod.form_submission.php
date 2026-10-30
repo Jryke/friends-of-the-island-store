@@ -4,16 +4,18 @@
  * Form Submission Module
  *
  * Wraps HTML forms to capture submissions, save them to the database,
- * and send email notifications via the MailerSend API.
+ * and send email notifications via MailerSend SMTP.
  *
- * Template tag usage:
+ * Template tag usage (params: form_name, return, id):
  *
  *   {exp:form_submission:form
  *       form_name="contact"
  *       return="contact"
  *       id="contact-form"
  *   }
- *       <input type="text" name="from" />
+ *       <input type="text" name="first_name" />
+ *       <input type="text" name="last_name" />
+ *       <input type="email" name="email" />
  *       <input type="text" name="subject" />
  *       <textarea name="message"></textarea>
  *       <input type="submit" value="Submit" />
@@ -23,7 +25,18 @@ class Form_submission
 {
     // POST keys that belong to the framework, not the user's form fields
     private $reserved_keys = ['ACT', 'RET', 'URI', 'form_name', 'XID', 'submit', 'csrf_token', 'site_id',
-                               'g-recaptcha-response', 'h-captcha-response', 'redirect', 'ref', 'es_ref_fb'];
+                               'g-recaptcha-response', 'h-captcha-response', 'redirect', 'ref', 'es_ref_fb',
+                               'fs_website_url', 'fs_ts'];
+
+    // Anti-spam: honeypot + time-trap
+    const HONEYPOT_FIELD   = 'fs_website_url';  // decoy input; humans never fill it
+    const TIMETRAP_FIELD   = 'fs_ts';           // "<unix_ts>.<hmac>" written at render time
+    const MIN_FILL_SECONDS = 3;                 // faster than this = bot
+    const MAX_FORM_AGE     = 7200;              // older than 2 hours = stale/replayed
+
+    // Caps on collected user fields (guards against oversized/abusive POSTs)
+    const MAX_FIELDS       = 25;                // max user fields stored/emailed
+    const MAX_VALUE_LENGTH = 5000;              // max characters per field value
 
     // ----------------------------------------------------------------
     // Template tag: {exp:form_submission:form} ... {/exp:form_submission:form}
@@ -38,7 +51,6 @@ class Form_submission
         $tagdata  = ee()->TMPL->tagdata;
         $form_name = ee()->TMPL->fetch_param('form_name', 'default');
         $return    = ee()->TMPL->fetch_param('return', ee()->uri->uri_string);
-        $redirect  = (int) ee()->TMPL->fetch_param('redirect', 0);
 
         ee()->load->helper('form');
 
@@ -65,7 +77,6 @@ class Form_submission
                 'RET'      => $return,
                 'URI'      => (ee()->uri->uri_string != '') ? ee()->uri->uri_string : 'index',
                 'form_name' => $form_name,
-                'redirect'  => $redirect,
             ],
         ];
 
@@ -82,6 +93,9 @@ class Form_submission
                 $res .= $this->_captcha_widget($captcha_provider, $captcha_site_key, $form_id);
             }
         }
+
+        // Anti-spam fields: off-screen honeypot + HMAC-signed render timestamp
+        $res .= $this->_antispam_fields();
 
         $res .= '</form>';
 
@@ -108,12 +122,39 @@ class Form_submission
         // Gather user-supplied fields (strip framework keys)
         $fields = [];
         foreach ($_POST as $key => $val) {
-            if ( ! in_array($key, $this->reserved_keys)) {
-                $fields[$key] = ee()->input->post($key, true);
+            if (in_array($key, $this->reserved_keys, true)) {
+                continue;
             }
+            // Skip array/non-scalar POST values (e.g. message[]=x) and cap the field count
+            if ( ! is_scalar($val) || count($fields) >= self::MAX_FIELDS) {
+                continue;
+            }
+            $clean = (string) ee()->input->post($key, true);
+            $fields[$key] = function_exists('mb_substr')
+                ? mb_substr($clean, 0, self::MAX_VALUE_LENGTH, 'UTF-8')
+                : substr($clean, 0, self::MAX_VALUE_LENGTH);
         }
 
         $form_name = ee()->input->post('form_name', true) ?: 'default';
+
+        // Honeypot: a filled decoy field means a bot. Fake success (no save, no email)
+        // so the bot isn't tipped off.
+        if ((string) ee()->input->post(self::HONEYPOT_FIELD) !== '') {
+            $this->_redirect_success();
+        }
+
+        // Time-trap: signed timestamp must be valid, not too fresh, not too old.
+        if ( ! $this->_timetrap_ok()) {
+            ee()->lang->loadfile('form_submission');
+            ee()->output->show_message([
+                'title'    => lang('fs_timetrap_failed'),
+                'heading'  => lang('fs_timetrap_failed'),
+                'content'  => lang('fs_timetrap_failed_desc'),
+                'redirect' => '',
+                'link'     => [ee()->functions->form_backtrack(1), lang('fs_timetrap_go_back')],
+            ]);
+            return;
+        }
 
         // Verify CAPTCHA token if a provider is configured
         $captcha_provider = $this->_get_setting('captcha_provider') ?: 'none';
@@ -177,6 +218,15 @@ class Form_submission
                     ->update('exp_form_submissions', ['email_sent' => 1]);
         }
 
+        $this->_redirect_success();
+    }
+
+    /**
+     * Build the return URL from RET and 303-redirect. Never returns.
+     * Shared by the normal success path and the silent honeypot path.
+     */
+    private function _redirect_success()
+    {
         // ---- Build return URL ----
         $ret_raw = ee()->input->post('RET', true);
         $x = explode('|', (string) $ret_raw);
@@ -197,20 +247,6 @@ class Form_submission
                 : ee()->functions->form_backtrack(1);
         }
 
-        $return_name = (isset($x[1]) && $x[1] !== '')
-            ? $x[1]
-            : (ee()->config->item('site_name') ?: 'Back');
-
-        // If a redirect delay was requested, pass the delay and origin to the success page
-        $redirect_delay = (int) ee()->input->post('redirect');
-        if ($redirect_delay > 0) {
-            $origin      = ee()->input->post('URI', true) ?: '';
-            $origin_url  = ($origin !== '') ? ee()->functions->create_url($origin) : '';
-            $separator   = (strpos($return_link, '?') !== false) ? '&' : '?';
-            $return_link .= $separator . 'redirect_after=' . $redirect_delay
-                          . '&redirect_to=' . rawurlencode($origin_url);
-        }
-
         while (ob_get_level()) {
             ob_end_clean();
         }
@@ -222,8 +258,45 @@ class Form_submission
     // Private helpers
     // ----------------------------------------------------------------
 
+    /** HMAC of a timestamp string, keyed with EE's session_crypt_key. */
+    private function _timetrap_sig($ts)
+    {
+        return hash_hmac('sha256', (string) $ts, (string) ee()->config->item('session_crypt_key'));
+    }
+
     /**
-     * Send a notification email via MailerSend SMTP (STARTTLS, port 587).
+     * Hidden honeypot (off-screen, not display:none) + signed timestamp field.
+     */
+    private function _antispam_fields()
+    {
+        $ts    = time();
+        $token = $ts . '.' . $this->_timetrap_sig($ts);
+
+        return '<div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">'
+             . '<input type="text" name="' . self::HONEYPOT_FIELD . '" value="" tabindex="-1" autocomplete="off" aria-hidden="true">'
+             . '</div>'
+             . '<input type="hidden" name="' . self::TIMETRAP_FIELD . '" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
+    }
+
+    /**
+     * Verify the signed render timestamp and the elapsed time.
+     * @return bool false if missing, forged, too fast, or too old
+     */
+    private function _timetrap_ok()
+    {
+        $raw = (string) ee()->input->post(self::TIMETRAP_FIELD);
+        if ( ! preg_match('/^(\d{1,12})\.([a-f0-9]{64})\z/D', $raw, $m)) {
+            return false;
+        }
+        if ( ! hash_equals($this->_timetrap_sig($m[1]), $m[2])) {
+            return false;
+        }
+        $elapsed = time() - (int) $m[1];
+        return $elapsed >= self::MIN_FILL_SECONDS && $elapsed <= self::MAX_FORM_AGE;
+    }
+
+    /**
+     * Send a notification email via MailerSend SMTP (STARTTLS on 587/2525, SSL on 465).
      *
      * Uses EE's built-in email library initialised with the SMTP credentials
      * stored in the add-on settings. Return-Path is explicitly set to the
@@ -257,7 +330,6 @@ class Form_submission
         $first_name = trim($fields['first_name'] ?? '');
         $last_name  = trim($fields['last_name']  ?? '');
         $email      = trim($fields['email']       ?? '');
-        $subj       = trim($fields['subject']     ?? '');
         $message    = trim($fields['message']     ?? '');
 
         $site_name = ee()->config->item('site_name') ?: 'website';
@@ -279,6 +351,8 @@ class Form_submission
 
         // Initialise EE's email library with our SMTP config, overriding
         // any global EE mail settings.
+        $smtp_crypto = ($smtp_port === 465) ? 'ssl' : 'tls';   // 465 = implicit SSL; 587/2525 = STARTTLS
+
         ee()->load->library('email');
         ee()->email->initialize([
             'protocol'    => 'smtp',
@@ -286,7 +360,7 @@ class Form_submission
             'smtp_port'   => $smtp_port,
             'smtp_user'   => $smtp_user,
             'smtp_pass'   => $smtp_pass,
-            'smtp_crypto' => 'tls',   // STARTTLS on port 587
+            'smtp_crypto' => $smtp_crypto,
             'wordwrap'    => true,
             'mailtype'    => 'text',
             'charset'     => 'utf-8',
@@ -444,28 +518,40 @@ class Form_submission
      */
     private function _get_setting($key)
     {
+        // Per-request memo of raw rows for the current site, loaded in ONE query.
+        // Settings are only read (never written) during form()/process().
+        static $cache = null;
+        static $cache_site = null;
+
         // These keys are stored encrypted
         $sensitive = ['smtp_user', 'smtp_pass', 'captcha_secret_key'];
 
         $site_id = (int) ee()->config->item('site_id');
-        $query = ee()->db->select('setting_value')
-                         ->where('site_id', $site_id)
-                         ->where('setting_key', $key)
-                         ->get('exp_form_submission_settings');
 
-        if ($query->num_rows() > 0) {
-            $value = $query->row('setting_value');
-
-            if (in_array($key, $sensitive) && $value !== '') {
-                $decrypted = ee('Encrypt')->decode($value, ee()->config->item('session_crypt_key'));
-                // Fall back to raw value if decryption fails (e.g. pre-encryption data)
-                return ($decrypted !== false && $decrypted !== '') ? $decrypted : $value;
+        if ($cache === null || $cache_site !== $site_id) {
+            $cache = [];
+            $cache_site = $site_id;
+            $query = ee()->db->select('setting_key, setting_value')
+                             ->where('site_id', $site_id)
+                             ->get('exp_form_submission_settings');
+            foreach ($query->result_array() as $row) {
+                $cache[$row['setting_key']] = $row['setting_value'];
             }
-
-            return $value;
         }
 
-        return null;
+        if ( ! array_key_exists($key, $cache)) {
+            return null;
+        }
+
+        $value = $cache[$key];
+
+        if (in_array($key, $sensitive) && $value !== '') {
+            $decrypted = ee('Encrypt')->decode($value, ee()->config->item('session_crypt_key'));
+            // Fall back to raw value if decryption fails (e.g. pre-encryption data)
+            return ($decrypted !== false && $decrypted !== '') ? $decrypted : $value;
+        }
+
+        return $value;
     }
 }
 // END CLASS
