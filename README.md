@@ -82,21 +82,16 @@ Templates and snippets are files in `private_html/system/user/templates/default_
 Every page template follows this order:
 
 ```
-<!doctype html>
-<html lang="en">
-<head>
-{head}                     shared meta, fonts and CSS (snippet)
-  <title> and meta description
-</head>
-<body>
+{head}                     whole document head: <!doctype>, <html>, <head>, meta/fonts/CSS,
+                           <title> + meta description, </head>, <body> (snippet)
 {nav}                      skip link, masthead and menu; ends by opening <main id="main">
   ...page content...        page templates never write <main> themselves
 {footer}                   begins by closing </main>; then footer, scripts, </body></html>
 ```
 
-- **Snippets** (`{head}`, `{nav}`, `{footer}`) live in `_partials/` and appear under Design > Template Partials. `{nav}` and `{footer}` contain their own entry loop, so they stay outside any other channel loop.
-- **Embeds** in the `_partials` template group (names start with `_` so they are not reachable by URL) are used for pieces that run their own entry loop: `{embed="_partials/_store-hours"}`, `_store-phone`, `_contact-details`, `_contact-form`, `_latest-newsletter`, `_newsletter-list`.
-- **Template groups:** `home` (default group: home page, 404, contact thank-you), `pages` (every Pages entry), `newsletters` (issue detail), `give` (`/give` redirect).
+- **Snippets** (`{head}`, `{nav}`, `{footer}`) live in `_partials/` and appear under Design > Template Partials. `{head}` now outputs the entire document head through the opening `<body>` tag, including a single site-wide `<title>`/meta placeholder (to be managed per-page by the seo_lite add-on once installed). `{nav}` and `{footer}` contain their own entry loop, so they stay outside any other channel loop.
+- **Embeds** in the `embeds` template group (names start with `_` so they are not reachable by URL) are used for pieces that run their own entry loop: `{embed="embeds/_store-hours"}`, `_store-phone`, `_contact-details`, `_contact-form`, `_latest-newsletter`, `_newsletter-list`.
+- **Template groups:** `home` (default group: home page), `pages` (every Pages entry, plus 404 and the contact thank-you), `newsletters` (issue detail), `give` (`/give` redirect).
 - **Fluid and grid syntax:** block tags are `{page_content:group}`, block fields `{group:field}`, grid columns `{gridfield:col}`; grid file columns use the full path pair `{group:gridfield:col}...{/group:gridfield:col}`.
 - Rich text is output without classes; styling hooks are wrapper classes in `style.css` (`.reason-list`, `.text-page`, `.lead-text`, `.panel-rte`, `.donation-embed`).
 

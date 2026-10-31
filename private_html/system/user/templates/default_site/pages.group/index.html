@@ -1,13 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
 {head}
-{exp:channel:entries channel="pages" limit="1" disable="member_data|pagination|categories|category_fields"}
-<title>{title} &mdash; Friends of the Island Store</title>
-<meta name="description" content="{page_banner_text:attr_safe limit="200"}">
-{/exp:channel:entries}
-</head>
-<body>
 {nav}
 {exp:channel:entries channel="pages" limit="1" disable="member_data|pagination|categories|category_fields"}
 
@@ -148,7 +139,7 @@
   <section class="section section--tight">
     <div class="container">
       <div class="row g-4">
-        {embed="_partials/_newsletter-list"}
+        {embed="embeds/_newsletter-list"}
         {if newsletters_list:soon_title}
         <div class="col-md-6">
           <div class="panel panel--fill">
@@ -169,16 +160,16 @@
       <div class="row g-4 g-lg-5">
         <div class="col-lg-7">
           {if contact_info:contact_form_heading}<h2 class="section-title">{contact_info:contact_form_heading}</h2>{/if}
-          {embed="_partials/_contact-form"}
+          {embed="embeds/_contact-form"}
         </div>
         <div class="col-lg-5">
           {if contact_info:contact_direct_heading}<h2 class="section-title">{contact_info:contact_direct_heading}</h2>{/if}
-          {embed="_partials/_contact-details"}
+          {embed="embeds/_contact-details"}
           {if contact_info:contact_store_heading}
           <div class="panel">
             <h3>{contact_info:contact_store_heading}</h3>
             {if contact_info:contact_store_text}<p>{contact_info:contact_store_text}</p>{/if}
-            {embed="_partials/_store-phone"}
+            {embed="embeds/_store-phone"}
           </div>
           {/if}
         </div>
